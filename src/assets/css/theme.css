@@ -1,0 +1,17 @@
+:root[theme="light"] {
+    --headBgc: rgb(255, 255, 255);
+    --mainBgc: rgb(189, 224, 251);
+    --btnBgc: rgb(64, 158, 255);
+    --btnFontColor: rgb(255, 255, 255);
+    --fontColor: rgb(0, 0, 0);
+    --cardBgc: rgb(255, 255, 255);
+}
+
+:root[theme="dark"] {
+    --headBgc: rgb(50, 50, 58);
+    --mainBgc: rgb(39, 39, 47);
+    --btnBgc: rgb(84, 110, 229);
+    --btnFontColor: rgb(178, 178, 178);
+    --fontColor: rgb(178, 178, 178);
+    --cardBgc: rgb(84, 92, 100);
+}
