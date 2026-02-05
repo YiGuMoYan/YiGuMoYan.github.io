@@ -1,0 +1,926 @@
+:root {
+    --tianyi-blue: #66CCFF;
+    --white: #FFFFFF;
+    --bg-gradient-start: #E6F7FF;
+    --bg-gradient-end: #FFFFFF;
+    --text-main: #333333;
+    --text-light: #666666;
+    --accent-yellow: #FFE153;
+    --accent-pink: #FFB7C5;
+
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --glass-shadow: 0 8px 32px rgba(102, 204, 255, 0.15);
+
+    --font-main: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    --font-header: 'M PLUS Rounded 1c', 'Segoe UI', sans-serif;
+    --font-mono: 'Consolas', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+    line-height: 1.8; /* 优化：增加行高，提升可读性 */
+    min-height: 100vh;
+    letter-spacing: 0.3px; /* 优化：轻微字间距，更精致 */
+}
+
+/* === NEW: Starfield Background === */
+.starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -4;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.stars {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: transparent;
+}
+
+.stars:nth-child(1) {
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, #66CCFF, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, #FFB7C5, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent);
+    background-size: 200px 200px, 300px 300px, 150px 150px, 250px 250px, 180px 180px;
+    animation: twinkle 3s infinite ease-in-out;
+}
+
+.stars:nth-child(2) {
+    background-image:
+        radial-gradient(1px 1px at 10% 20%, white, transparent),
+        radial-gradient(1px 1px at 70% 80%, #66CCFF, transparent),
+        radial-gradient(1px 1px at 40% 60%, white, transparent);
+    background-size: 220px 220px, 280px 280px, 190px 190px;
+    animation: twinkle 4s infinite ease-in-out 1s;
+}
+
+.stars:nth-child(3) {
+    background-image:
+        radial-gradient(1px 1px at 30% 40%, #FFE153, transparent),
+        radial-gradient(2px 2px at 65% 25%, white, transparent),
+        radial-gradient(1px 1px at 85% 75%, #66CCFF, transparent);
+    background-size: 260px 260px, 200px 200px, 240px 240px;
+    animation: twinkle 5s infinite ease-in-out 2s;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* === NEW: Meteor Canvas === */
+#meteor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3;
+    pointer-events: none;
+}
+
+/* === NEW: Mouse Trail Canvas === */
+#trail-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    pointer-events: none;
+}
+
+/* Particle Rain Canvas */
+#background-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-gradient-start);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--tianyi-blue);
+    border-radius: 4px;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px; /* 优化：从1100px增加到1200px，更宽敞 */
+    margin: 0 auto;
+    padding: 0 32px; /* 优化：从20px增加到32px，两侧更多呼吸空间 */
+}
+
+section {
+    padding: 100px 0; /* 优化：从80px增加到100px，区块间距更大 */
+    opacity: 0;
+    /* 移除translateY晃动 */
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+section.visible {
+    opacity: 1;
+    /* 移除transform，不再晃动 */
+}
+
+/* === NEW: 3D Flip Transition - 优化版本 === */
+section.flip-enter {
+    transform-style: preserve-3d;
+    perspective: 2000px;
+}
+
+@media (min-width: 769px) {
+    /* 保留3D翻转效果，但去掉translateY晃动 */
+    section#about:not(.visible) {
+        transform: rotateY(-90deg);
+    }
+
+    section#skills:not(.visible) {
+        transform: rotateX(90deg);
+    }
+
+    section#social:not(.visible) {
+        transform: rotateY(90deg);
+    }
+
+    section#friends:not(.visible) {
+        transform: rotateX(-90deg);
+    }
+}
+
+/* Titles */
+h2.section-title {
+    font-family: var(--font-header);
+    font-size: 2.5rem; /* 优化：从2.2rem增加到2.5rem */
+    text-align: center;
+    margin-bottom: 60px; /* 优化：从50px增加到60px */
+    color: var(--tianyi-blue);
+    position: relative;
+    font-weight: 700;
+    letter-spacing: 1px; /* 优化：增加字间距 */
+}
+
+h2.section-title::after {
+    content: '';
+    display: block;
+    width: 80px; /* 优化：从60px增加到80px */
+    height: 5px; /* 优化：从4px增加到5px */
+    background: linear-gradient(90deg, var(--accent-yellow), var(--accent-pink)); /* 优化：渐变色装饰线 */
+    margin: 20px auto 0; /* 优化：从15px增加到20px */
+    border-radius: 3px;
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px; /* 优化：从20px增加到24px，更圆润 */
+    padding: 48px; /* 优化：从40px增加到48px，内容更舒展 */
+    box-shadow: var(--glass-shadow), inset 0 0 20px rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-float:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(102, 204, 255, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+/* 禁用 skills-card-wrapper 的 hover 效果 */
+.skills-card-wrapper.hover-float:hover,
+.skills-card-wrapper:hover {
+    transform: none !important;
+    box-shadow: var(--glass-shadow), inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Header */
+header {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+/* === NEW: Particle Title Canvas === */
+.particle-title-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 200px;
+    z-index: 10;
+    pointer-events: none; /* 禁止鼠标交互 */
+}
+
+.main-title {
+    font-family: var(--font-header);
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: var(--tianyi-blue);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    /* Hidden by default, particle version will show */
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+.slogan-text {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    font-weight: 300;
+    min-height: 1.5em;
+}
+
+.scroll-down {
+    position: absolute;
+    bottom: 50px;
+    /* 移除跳动动画 */
+    /* animation: bounce 2s infinite; */
+    animation: gentle-fade 3s ease-in-out infinite;
+}
+.scroll-down i {
+    color: var(--tianyi-blue);
+    font-size: 28px;
+    filter: drop-shadow(0 0 5px rgba(102, 204, 255, 0.5));
+}
+
+/* 改为温和的淡入淡出 */
+@keyframes gentle-fade {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* About Section */
+.about-content {
+    display: flex;
+    align-items: center;
+    gap: 64px; /* 优化：从50px增加到64px */
+}
+
+.avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 220px; /* 优化：从200px增加到220px */
+    height: 220px;
+    border-radius: 50%;
+    border: 6px solid rgba(255, 255, 255, 0.9); /* 优化：边框从5px增加到6px，更醒目 */
+    box-shadow: 0 15px 40px rgba(102, 204, 255, 0.4); /* 优化：阴影加强 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    object-fit: cover;
+}
+.avatar:hover {
+    /* 优化：只放大，不旋转，避免眩晕 */
+    transform: scale(1.08); /* 优化：从1.05增加到1.08 */
+    box-shadow: 0 20px 50px rgba(102, 204, 255, 0.6);
+}
+
+.intro-text h2.section-header {
+    font-family: var(--font-header);
+    font-size: 2.2rem; /* 优化：从2rem增加到2.2rem */
+    color: var(--tianyi-blue);
+    margin-bottom: 24px; /* 优化：从20px增加到24px */
+    letter-spacing: 0.5px;
+}
+
+.profile-desc p {
+    margin-bottom: 16px; /* 优化：从12px增加到16px */
+    font-size: 1.15rem; /* 优化：从1.1rem增加到1.15rem */
+    color: var(--text-main);
+    line-height: 1.9; /* 优化：增加行高 */
+}
+.profile-desc strong {
+    color: var(--tianyi-blue);
+    font-weight: 600;
+}
+
+/* Skills Spectrum */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* 优化：从320px增加到340px */
+    gap: 36px; /* 优化：从30px增加到36px */
+    /* 完全禁用任何可能的动画 */
+    transform: none !important;
+    transition: none !important;
+}
+
+.skill-item {
+    margin-bottom: 0; /* 优化：移除margin，使用grid gap */
+    /* 完全移除淡入动画，直接显示 */
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    padding: 8px 0; /* 优化：增加上下内边距 */
+}
+
+/* Staggered delay for skills - 已禁用 */
+/* .skill-item:nth-child(1) { transition-delay: 0.1s; }
+.skill-item:nth-child(2) { transition-delay: 0.2s; }
+.skill-item:nth-child(3) { transition-delay: 0.3s; }
+.skill-item:nth-child(4) { transition-delay: 0.4s; }
+.skill-item:nth-child(5) { transition-delay: 0.5s; }
+.skill-item:nth-child(6) { transition-delay: 0.6s; } */
+
+.skill-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px; /* 优化：从8px增加到12px */
+    font-weight: 500;
+    color: var(--text-main);
+    font-size: 1.05rem; /* 优化：增加字体大小 */
+}
+.skill-percent {
+    color: var(--tianyi-blue);
+    font-weight: 700;
+    font-size: 1.1rem; /* 优化：百分比更醒目 */
+}
+
+.spectrum-bar {
+    width: 100%;
+    height: 12px; /* 优化：从10px增加到12px，进度条更粗 */
+    background: rgba(102, 204, 255, 0.1);
+    border-radius: 6px; /* 优化：圆角相应增加 */
+    overflow: hidden;
+    position: relative;
+}
+
+/* 背景流动效果 */
+.spectrum-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        rgba(102, 204, 255, 0.05) 0%,
+        rgba(102, 204, 255, 0.15) 50%,
+        rgba(102, 204, 255, 0.05) 100%);
+    background-size: 200% 100%;
+    animation: bg-flow 3s linear infinite;
+    border-radius: 5px;
+}
+
+@keyframes bg-flow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.spectrum-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tianyi-blue), var(--accent-pink));
+    border-radius: 5px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(102, 204, 255, 0.4);
+    /* 滚动进入时从0展开到目标宽度 */
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+
+section.visible .spectrum-fill {
+    /* JS会设置目标宽度 */
+}
+
+/* 渐变光泽扫过效果 */
+.spectrum-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shine-sweep 3s ease-in-out infinite;
+    border-radius: 5px;
+}
+
+@keyframes shine-sweep {
+    0% { background-position: -200% 0%; }
+    50% { background-position: 200% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+/* 脉冲光晕效果 */
+.spectrum-fill::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    width: 20px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 183, 197, 0.8) 0%,
+        rgba(255, 183, 197, 0.4) 50%,
+        transparent 100%);
+    filter: blur(4px);
+    animation: pulse-glow 2s ease-in-out infinite;
+    border-radius: 50%;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Shimmer effect - 已禁用，避免晃动 */
+/* .spectrum-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 2.5s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+} */
+
+.skill-desc {
+    display: block;
+    margin-top: 10px; /* 优化：从8px增加到10px */
+    font-size: 0.9rem; /* 优化：从0.85rem增加到0.9rem */
+    color: var(--text-light);
+    font-style: italic;
+    font-family: var(--font-main);
+    line-height: 1.6;
+}
+.skill-item:hover .skill-desc {
+    color: var(--tianyi-blue);
+    transition: color 0.3s;
+    /* 移除 translateX，避免晃动 */
+}
+
+/* Social & Friends Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* 优化：从240px增加到260px */
+    gap: 28px; /* 优化：从25px增加到28px */
+}
+
+.social-card, .friend-card {
+    opacity: 0;
+    /* 移除translateY晃动 */
+    transition: opacity 0.5s ease;
+}
+
+section.visible .social-card,
+section.visible .friend-card {
+    opacity: 1;
+    /* 移除transform，不再晃动 */
+}
+
+/* Staggered delay for grid items */
+.grid-container > *:nth-child(1) { transition-delay: 0.1s; }
+.grid-container > *:nth-child(2) { transition-delay: 0.2s; }
+.grid-container > *:nth-child(3) { transition-delay: 0.3s; }
+.grid-container > *:nth-child(4) { transition-delay: 0.4s; }
+
+.social-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    min-height: 160px; /* 优化：增加最小高度，更统一 */
+    padding: 32px 24px; /* 优化：增加内边距 */
+}
+
+/* Add glow effect on hover */
+.social-card::before, .friend-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 204, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
+.social-card:hover::before, .friend-card:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.social-card i {
+    font-size: 3.2rem; /* 优化：从3rem增加到3.2rem */
+    margin-bottom: 16px; /* 优化：从15px增加到16px */
+    color: var(--tianyi-blue);
+    transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
+}
+
+.social-card:hover i {
+    /* 优化：只放大，不旋转 */
+    transform: scale(1.2); /* 优化：从1.15增加到1.2 */
+    color: var(--accent-pink);
+    filter: drop-shadow(0 0 10px rgba(255, 183, 197, 0.7)); /* 优化：增强光晕 */
+}
+
+.social-card span {
+    font-size: 1.05rem; /* 优化：增加字体大小 */
+    font-weight: 500;
+}
+
+.friend-card {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 优化：从15px增加到20px */
+    text-decoration: none;
+    color: var(--text-main);
+    padding: 24px; /* 优化：从20px增加到24px */
+}
+
+.friend-avatar {
+    width: 70px; /* 优化：从60px增加到70px */
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid var(--tianyi-blue); /* 优化：从2px增加到3px */
+    flex-shrink: 0;
+}
+
+.friend-info h5 {
+    font-size: 1.15rem; /* 优化：从1.1rem增加到1.15rem */
+    margin-bottom: 6px; /* 优化：从4px增加到6px */
+    color: var(--tianyi-blue);
+    font-weight: 600;
+}
+.friend-info p {
+    font-size: 0.9rem; /* 优化：从0.85rem增加到0.9rem */
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* Footer */
+footer {
+    margin-top: 80px; /* 优化：从60px增加到80px */
+    padding: 80px 0; /* 优化：从60px增加到80px */
+    text-align: center;
+    background: linear-gradient(to top, #E6F7FF, transparent);
+    color: var(--text-light);
+}
+
+footer h3 {
+    font-family: var(--font-header);
+    color: var(--tianyi-blue);
+    margin-bottom: 12px; /* 优化：从10px增加到12px */
+    font-size: 1.6rem; /* 优化：从1.5rem增加到1.6rem */
+}
+
+footer p {
+    margin: 8px 0; /* 优化：增加行间距 */
+    font-size: 0.95rem;
+}
+
+footer a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+footer a:hover {
+    color: var(--tianyi-blue);
+}
+
+/* Click Ripple Effect */
+.click-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, var(--tianyi-blue), transparent);
+    opacity: 0.8;
+    pointer-events: none;
+    animation: ripple-anim 0.8s ease-out forwards;
+    z-index: 9999;
+}
+
+@keyframes ripple-anim {
+    0% { width: 10px; height: 10px; opacity: 0.8; box-shadow: 0 0 0 0 rgba(102, 204, 255, 0.5); }
+    100% { width: 150px; height: 150px; opacity: 0; box-shadow: 0 0 0 20px rgba(102, 204, 255, 0); }
+}
+
+/* Animations - 优化，移除晃动 */
+@keyframes float {
+    /* 移除浮动动画，保留定义以免报错 */
+    0%, 100% { transform: translateY(0px); }
+}
+
+@keyframes bounce {
+    /* 移除跳动动画，保留定义以免报错 */
+    0%, 100% { transform: translateY(0); }
+}
+
+@keyframes pulse-width {
+    0% { filter: brightness(1); }
+    100% { filter: brightness(1.1); }
+}
+
+/* Enhanced Visuals */
+.glass-card {
+    /* Keep existing glass styles */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.4)); /* Gradient glass */
+}
+
+/* === NEW: Magic Circle Decorations === */
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.magic-circle {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.magic-circle-back {
+    z-index: -1;
+    animation: rotate-magic-circle 20s linear infinite;
+}
+
+.magic-circle-front {
+    z-index: 1;
+    animation: rotate-magic-circle 15s linear infinite reverse;
+}
+
+@keyframes rotate-magic-circle {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Magic Circle for Skills Section */
+.skills-card-wrapper {
+    position: relative;
+    /* 禁用glass-card的hover效果，避免晃动 */
+    transform: none !important;
+}
+
+.magic-circle-skills {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    animation: rotate-magic-circle 30s linear infinite;
+    opacity: 0.6;
+}
+
+/* === NEW: Enhanced Music Widget with Spectrum === */
+.music-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 20px rgba(102, 204, 255, 0.4);
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: visible;
+}
+
+.music-widget:hover {
+    width: 240px;
+    border-radius: 30px;
+    padding: 0 20px;
+    justify-content: space-between;
+}
+
+.music-icon {
+    font-size: 22px;
+    color: var(--tianyi-blue);
+    min-width: 30px;
+    text-align: center;
+    animation: pulse-music 2s infinite;
+}
+
+.music-text {
+    white-space: nowrap;
+    opacity: 0;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    transition: opacity 0.3s ease 0.1s;
+    margin-right: 10px;
+}
+
+.music-widget:hover .music-text {
+    opacity: 1;
+}
+
+/* Audio Spectrum Bars */
+.spectrum-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 30px;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.2s;
+}
+
+.music-widget:hover .spectrum-container {
+    opacity: 1;
+}
+
+/* 音乐组件的频谱柱 - 重命名避免冲突 */
+.spectrum-container .spectrum-bar {
+    width: 4px;
+    background: linear-gradient(to top, var(--tianyi-blue), var(--accent-pink));
+    border-radius: 2px;
+    height: 10px;
+    animation: spectrum-jump 0.8s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+
+@keyframes spectrum-jump {
+    /* 优化：减小跳动幅度 */
+    0%, 100% { height: 12px; }
+    50% { height: 20px; }
+}
+
+@keyframes pulse-music {
+    /* 优化：减小脉冲幅度，更温和 */
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Mobile Tweaks for widget */
+@media (max-width: 768px) {
+    .music-widget {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+    .music-widget:hover {
+        width: 50px; /* Disable expand on mobile */
+    }
+    .spectrum-container {
+        display: none; /* Hide spectrum on mobile */
+    }
+
+    /* Disable trail canvas on mobile */
+    #trail-canvas {
+        display: none;
+    }
+
+    /* Simplify particle title on mobile */
+    .particle-title-canvas {
+        width: 90%;
+        max-width: 400px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.8rem;
+        letter-spacing: 0;
+    }
+
+    .slogan-text {
+        font-size: 1.1rem;
+        padding: 0 10px;
+    }
+
+    .container {
+        padding: 0 20px; /* 移动端保持较小间距 */
+    }
+
+    section {
+        padding: 60px 0; /* 移动端缩小区块间距 */
+    }
+
+    h2.section-title {
+        font-size: 2rem; /* 移动端缩小标题 */
+        margin-bottom: 40px;
+    }
+
+    .glass-card {
+        padding: 28px 20px; /* 移动端缩小内边距 */
+        border-radius: 16px;
+    }
+
+    /* About Section Mobile */
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 32px;
+    }
+
+    .avatar {
+        width: 180px; /* 移动端缩小头像 */
+        height: 180px;
+    }
+
+    .intro-text h2.section-header {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .profile-desc p {
+        font-size: 1.05rem;
+        text-align: left;
+    }
+
+    /* Grid Adjustments */
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+        gap: 20px;
+    }
+
+    /* Footer */
+    footer {
+        padding: 50px 0;
+        margin-top: 60px;
+    }
+
+    /* Disable some heavy animations on mobile */
+    .orb {
+        opacity: 0.4;
+        filter: blur(60px);
+    }
+
+    /* Hover effects might stick on mobile, so we tone them down or rely on active state */
+    .hover-float:active {
+        transform: scale(0.98);
+    }
+}
+
+/* 3D Tilt Effect Utilities */
+.js-tilt-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+}
+
+.js-tilt-element {
+    transition: transform 0.1s ease-out; /* Fast transition for mouse movement */
+}

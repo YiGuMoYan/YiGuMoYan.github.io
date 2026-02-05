@@ -1,216 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忆古陌烟 | 共鸣之歌</title>
+    <meta name="description" content="忆古陌烟的个人网站，为代码注入旋律。">
+    <meta name="keywords" content="忆古陌烟, 洛天依, 二次元, 个人网站, 博客, 音乐, 编程">
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.jpg">
-    <title>忆古陌烟 | 个人介绍</title>
-    <meta name="description" content="期待与更多的人相遇！">
-    <meta name="keywords" content="二次元 个人网站 博客  技术宅  动漫 动画 宅 宅文化">
     <link rel="apple-touch-icon-precomposed" href="images/avatar.bab2b7d4.jpeg">
-    <link rel="stylesheet" type="text/css" href="css/h.9c69ed6c.css">
-    <link rel="stylesheet" type="text/css" href="css/nekotora.99cf6f8c.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <style>
-        .toast-bottom-center {
-            position: absolute;
-            left: 30px;
-            right: 10px;
-            top: 20px;
-        }
-    </style>
 
-    <div class="background">
-        <canvas id="startrack"></canvas>
-        <div class="cover"></div>
+    <!-- Background Layers -->
+    <!-- Starfield Background -->
+    <div class="starfield">
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
     </div>
-    <div class="main">
-        <div class="ch intro">
-            <div class="container">
-                <div class="hello">
-                    <h1 id="slogan">思考中...</h1>
-                    <h2>
-                        <div class="circle"><span></span> <span></span>
-                            <span></span>
-                        </div>
-                        忆古陌烟 | 个人介绍
-                    </h2>
-                </div>
-            </div>
+
+    <!-- Meteor Canvas -->
+    <canvas id="meteor-canvas"></canvas>
+
+    <!-- Particle Rain Canvas -->
+    <canvas id="background-canvas"></canvas>
+
+    <!-- Mouse Trail Canvas -->
+    <canvas id="trail-canvas"></canvas>
+
+    <!-- Header / Hero -->
+    <header>
+        <div class="hero-content">
+            <!-- Particle Text Title -->
+            <canvas id="particle-title-canvas" class="particle-title-canvas"></canvas>
+            <h1 class="main-title" style="opacity: 0;">忆古陌烟</h1>
+            <h2 id="slogan-text" class="slogan-text"></h2>
         </div>
-        <div class="ch about">
+        <div class="scroll-down">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- About Section -->
+        <section id="about">
             <div class="container">
-                <h2 class="chtitle">Who is <span>忆古陌烟</span>？</h2>
-                <div class="clear">
-                    <div class="introduct">
-                        <img class="avatar" src="images/head.jpg">
-                        <P>每一个梦都是个旋律，漫天回忆该如何去聆听。把心里面的思念传递给你，让我们一起唱吧♪，心中的歌～～～</p>
-                        <p style="padding-bottom:1em;">How lucky to meet you!</p>
-                        <p>你好，这里是忆古陌烟，一个总是在搞着奇怪事情的程序猿，主职软件开发，副职网络安全。</p>
-                        <p>满怀期待，重新出发！</p>
-                        <div class="chatbox">
-                            <div class="line loading"><span></span>
-                                <span></span> <span></span>
-                            </div>
+                <div class="glass-card about-content">
+                    <div class="avatar-wrapper">
+                        <!-- Magic Circle Behind Avatar -->
+                        <svg class="magic-circle magic-circle-back" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="90" fill="none" stroke="#66CCFF" stroke-width="0.5" opacity="0.3"/>
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="#66CCFF" stroke-width="0.3" opacity="0.4"/>
+                            <path d="M 100,10 L 100,30 M 100,170 L 100,190 M 10,100 L 30,100 M 170,100 L 190,100" stroke="#66CCFF" stroke-width="0.5" opacity="0.3"/>
+                            <path d="M 30,30 L 45,45 M 155,155 L 170,170 M 30,170 L 45,155 M 155,45 L 170,30" stroke="#66CCFF" stroke-width="0.5" opacity="0.3"/>
+                            <circle cx="100" cy="100" r="50" fill="none" stroke="#FFB7C5" stroke-width="0.5" opacity="0.2" stroke-dasharray="5,5"/>
+                        </svg>
+                        <svg class="magic-circle magic-circle-front" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="85" fill="none" stroke="#66CCFF" stroke-width="0.8" opacity="0.4" stroke-dasharray="10,5"/>
+                            <circle cx="100" cy="100" r="60" fill="none" stroke="#FFE153" stroke-width="0.3" opacity="0.3"/>
+                        </svg>
+                        <img src="images/head.jpg" alt="Avatar" class="avatar">
+                    </div>
+                    <div class="intro-text">
+                        <h2 class="section-header">Master Profile</h2>
+                        <div class="profile-desc">
+                            <p>你好，这里是 <strong>忆古陌烟</strong>。</p>
+                            <p>用代码编织旋律，让逻辑随心跳共鸣。</p>
+                            <p>在这片纯白的天空下，连接每一个热爱创造的灵魂。</p>
                         </div>
                     </div>
-                    <ul class="skill clear">
-                        <li>
-                            <p>Java</p>
-                            <div class="progress">
-                                <div style="width:80%;"></div>
-                                <span>编写主流服务端的能力</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>Python</p>
-                            <div class="progress">
-                                <div style="width:70%;"></div>
-                                <span>沉迷于调包无法自拔</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>Vue</p>
-                            <div class="progress">
-                                <div style="width:50%;"></div>
-                                <span>除了设计，开发还是勉勉强强</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>WEB安全</p>
-                            <div class="progress">
-                                <div style="width:65%;">
-                                </div>
-                                <span>HACKED BY YIGUMOYAN</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>世界</p>
-                            <div class="progress">
-                                <div style="width:20%;"></div>
-                                <span>观测世界程度的能力</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>搞事情</p>
-                            <div class="progress">
-                                <div style="width:82%;"></div>
-                                <span>人生不搞事情与咸鱼有什么区别</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>魔法</p>
-                            <div class="progress">
-                                <div style="width:12%;"></div>
-                                <span>和普通人相同程度的能力</span>
-                            </div>
-                        </li>
-                        <li>
-                            <p>二次元</p>
-                            <div class="progress">
-                                <div style="width:99%;"></div>
-                                <span>快看，傻逼二次元</span>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="find ch">
-            <div class="container links">
-                <h2 class="chtitle">忆古陌烟生活的<span>地方</span></h2>
-                <div class="clear">
-                    <a href="tencent://message/?uin=3194775246" target="_blank">
-                        <div class="item">
-                            <div class="bg" style="background-color:#28a9e0"></div>
-                            <div class="inner"><i class="icon-qq"></i>
-                                <span>QQ</span>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills">
+            <div class="container">
+                <h2 class="section-title">能力参数 / Ability Stats</h2>
+                <div class="glass-card skills-card-wrapper">
+                    <!-- Magic Circle Background for Skills -->
+                    <svg class="magic-circle-skills" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="200" cy="200" r="180" fill="none" stroke="#66CCFF" stroke-width="0.5" opacity="0.15"/>
+                        <circle cx="200" cy="200" r="150" fill="none" stroke="#66CCFF" stroke-width="0.3" opacity="0.2"/>
+                        <circle cx="200" cy="200" r="120" fill="none" stroke="#FFB7C5" stroke-width="0.5" opacity="0.15" stroke-dasharray="8,4"/>
+                        <path d="M 200,20 L 200,50 M 200,350 L 200,380 M 20,200 L 50,200 M 350,200 L 380,200" stroke="#66CCFF" stroke-width="0.5" opacity="0.2"/>
+                    </svg>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>全栈开发 / Full Stack</span>
+                                <span class="skill-percent">80%</span>
                             </div>
-                        </div>
-                    </a>
-                    <a href="https://space.bilibili.com/442384066" target="_blank">
-                        <div class="item">
-                            <div class="bg" style="background-color:#f9a2a8"></div>
-                            <div class="inner"><i class="icon-bilibili"></i>
-                                <span>Bilibili</span>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 80%;"></div>
                             </div>
+                            <span class="skill-desc">造轮子这种事，最开心了~</span>
                         </div>
-                    </a>
-                    <a href="https://music.163.com/#/user/home?id=3257287707" target="_blank">
-                        <div class="item">
-                            <div class="bg" style="background-color:#f12d35"></div>
-                            <div class="inner"><i class="icon-netease_music"></i>
-                                <span>网易云音乐</span>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>网络安全 / Cyber Sec</span>
+                                <span class="skill-percent">70%</span>
                             </div>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 70%;"></div>
+                            </div>
+                            <span class="skill-desc">不仅会防守，偶尔也会...嘿嘿</span>
                         </div>
-                    </a>
-                    <a href="https://github.com/YiGuMoYan" target="_blank">
-                        <div class="item">
-                            <div class="bg" style="background-color:#353535"></div>
-                            <div class="inner"><i class="icon-github"></i> <span>Github</span></div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>人工智能 / AI Learning</span>
+                                <span class="skill-percent">50%</span>
+                            </div>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 50%;"></div>
+                            </div>
+                            <span class="skill-desc">正在努力成为炼丹师！</span>
                         </div>
-                    </a>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>二次元 / ACG</span>
+                                <span class="skill-percent">99%</span>
+                            </div>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 99%;"></div>
+                            </div>
+                            <span class="skill-desc">打破次元壁，寻找生活中的微光</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span>世界观 / Worldview</span>
+                                <span class="skill-percent">100%</span>
+                            </div>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="skill-desc">保持好奇，相信代码能改变世界...大概？</span>
+                        </div>
+                         <div class="skill-item">
+                            <div class="skill-info">
+                                <span>日常摸鱼 / Chilling</span>
+                                <span class="skill-percent">60%</span>
+                            </div>
+                            <div class="spectrum-bar">
+                                <div class="spectrum-fill" style="width: 60%;"></div>
+                            </div>
+                            <span class="skill-desc">今天的砖就搬到这里吧</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="gate ch">
-            <div class="container links">
-                <h2 class="chtitle">朝晞的<span>邻居</span>们</h2>
-                <div class="clear">
-                    <a href="https://www.lastdream.net" target="_blank">
-                        <div class="item">
-                            <div class="avatar"><img src="images/lastdream.jpg"></div>
-                            <div class="inner">
-                                <h5>最后的梦制作组</h5>
-                                <p>为了守护最后的梦</p>
-                            </div>
-                        </div>
+        </section>
+
+        <!-- Social Section -->
+        <section id="social">
+            <div class="container">
+                <h2 class="section-title">心跳同步 / Connect</h2>
+                <div class="grid-container">
+                    <a href="tencent://message/?uin=3194775246" target="_blank" class="glass-card social-card hover-float">
+                        <i class="fa-brands fa-qq"></i>
+                        <span>QQ Channel</span>
                     </a>
-                    <a href="https://5ixf.vip/#/" target="_blank">
-                        <div class="item akarin">
-                            <div class="avatar"><img src="images/feng.jpg"></div>
-                            <div class="inner">
-                                <h5>疯子</h5>
-                                <p>疯子哥~</p>
-                            </div>
-                        </div>
+                    <a href="https://space.bilibili.com/442384066" target="_blank" class="glass-card social-card hover-float">
+                        <i class="fa-brands fa-bilibili"></i>
+                        <span>Bilibili</span>
                     </a>
-                    <a href="http://boliang.daydayupup.com/" target="_blank">
-                        <div class="item akarin">
-                            <div class="avatar"><img src="images/borling.jpg"></div>
-                            <div class="inner">
-                                <h5>Borling</h5>
-                                <p>欢迎光临Borling的秘密基地</p>
-                            </div>
-                        </div>
+                    <a href="https://music.163.com/#/user/home?id=3257287707" target="_blank" class="glass-card social-card hover-float">
+                        <i class="fa-solid fa-music"></i>
+                        <span>NetEase Music</span>
+                    </a>
+                    <a href="https://github.com/YiGuMoYan" target="_blank" class="glass-card social-card hover-float">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Github Repo</span>
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="footer ch">
+        </section>
+
+        <!-- Friends Section -->
+        <section id="friends">
+            <div class="container">
+                <h2 class="section-title">共鸣链接 / Resonance Links</h2>
+                <div class="grid-container">
+                    <a href="https://www.lastdream.net" target="_blank" class="glass-card friend-card hover-float">
+                        <img src="images/lastdream.jpg" alt="LastDream" class="friend-avatar">
+                        <div class="friend-info">
+                            <h5>最后的梦制作组</h5>
+                            <p>守护最后的梦...</p>
+                        </div>
+                    </a>
+                    <a href="https://5ixf.vip/#/" target="_blank" class="glass-card friend-card hover-float">
+                        <img src="images/feng.jpg" alt="Feng" class="friend-avatar">
+                        <div class="friend-info">
+                            <h5>疯子</h5>
+                            <p>疯子哥~</p>
+                        </div>
+                    </a>
+                    <a href="http://boliang.daydayupup.com/" target="_blank" class="glass-card friend-card hover-float">
+                        <img src="images/borling.jpg" alt="Borling" class="friend-avatar">
+                        <div class="friend-info">
+                            <h5>Borling</h5>
+                            <p>Borling的秘密基地</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
         <div class="container">
-            <h3>忆古陌烟</h3>
-            <p>满怀期待，重新出发！</p>
+            <div class="footer-content">
+                <h3>YiGuMoYan</h3>
+                <p>为代码注入旋律</p>
+                <p><a href="http://beian.miit.gov.cn/" target="_blank">陕ICP备2023009995号-1</a></p>
+                <p class="copyright">Copyright © 2019 - 2026 忆古陌烟 | All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-            <p class="c">
-                <a style="color: #1F469A;vertical-align: middle;color: inherit;text-decoration: none"
-                    href="http://beian.miit.gov.cn/" target="_blank">陕ICP备2023009995号-1</a>
-            </p>
-
-            <p class="c">Copyright © by 忆古陌烟 All Rights Reserved.</p>
-            <p class="c">2019 - 2025</p>
-            <p class="c"><a href="/">Say hello to me @ </a></p>
+    <!-- Enhanced Music Widget with Spectrum -->
+    <div class="music-widget" id="music-widget">
+        <i class="fa-solid fa-music music-icon"></i>
+        <span class="music-text">Playing: 66CCFF...</span>
+        <div class="spectrum-container">
+            <div class="spectrum-bar" style="--delay: 0"></div>
+            <div class="spectrum-bar" style="--delay: 0.1s"></div>
+            <div class="spectrum-bar" style="--delay: 0.2s"></div>
+            <div class="spectrum-bar" style="--delay: 0.3s"></div>
+            <div class="spectrum-bar" style="--delay: 0.4s"></div>
+            <div class="spectrum-bar" style="--delay: 0.5s"></div>
+            <div class="spectrum-bar" style="--delay: 0.6s"></div>
+            <div class="spectrum-bar" style="--delay: 0.7s"></div>
         </div>
     </div>
-    <script src="js/page.3a0791a3.js"></script>
-    <script type="text/javascript" src="js/stats.js" charset="UTF-8">
-    </script>
 
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
 </body>
-
 </html>
